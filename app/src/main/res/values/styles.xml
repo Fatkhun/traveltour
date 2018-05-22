@@ -30,12 +30,21 @@
         <item name="android:layout_marginTop">23dp</item>
     </style>
 
-    <style name="MyTheme.Detail" parent="MyTheme"></style>
+    <style name="MyTheme.Detail" parent="MyTheme">
+        <item name="colorPrimary">@color/primary_500</item>
+        <item name="colorPrimaryDark">@color/primary_700</item>
+    </style>
 
     <color name="bg_light">#FAFAFA</color>
 
-    <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/primary_500</item>
+        <item name="colorPrimaryDark">@color/primary_700</item>
+    </style>
 
-    <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorPrimary">@color/primary_500</item>
+        <item name="colorPrimaryDark">@color/primary_700</item>
+    </style>
 
 </resources>

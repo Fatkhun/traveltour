@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -12,8 +14,7 @@
         <android.support.v7.widget.CardView
             android:id="@+id/cvInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -29,10 +30,10 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:text="Deskripsi"
-                    android:textSize="15dp"/>
+                    android:textSize="16dp"/>
                 <View
                     android:layout_width="20dp"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:layout_margin="10dp"
                     android:layout_below="@+id/deskripsi"
                     android:background="@color/yellow"/>
@@ -53,11 +54,11 @@
                     android:layout_marginLeft="10dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="15dp"
+                    android:textSize="16dp"
                     android:text="Harga"/>
                 <View
                     android:layout_width="20dp"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:layout_margin="10dp"
                     android:layout_below="@+id/harga"
                     android:background="@color/yellow"/>
@@ -78,11 +79,11 @@
                     android:layout_marginLeft="10dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="15dp"
+                    android:textSize="16dp"
                     android:text="Info"/>
                 <View
                     android:layout_width="20dp"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:layout_margin="10dp"
                     android:layout_below="@+id/infolain"
                     android:background="@color/yellow"/>
@@ -102,10 +103,10 @@
         <android.support.v7.widget.CardView
             android:id="@+id/cvDeskripsi"
             android:layout_below="@+id/cvInfo"
+            app:cardBackgroundColor="@color/cyan"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cyan"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="1dp"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -114,120 +115,167 @@
                 android:layout_margin="10dp">
 
                 <TextView
+                    android:id="@+id/informasiTour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:text="Deskripsi Paket Wisata"
-                    android:textSize="15dp"/>
+                    android:text="Informasi Tour"
+                    android:textSize="16dp"/>
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="3dp"
+                    android:layout_margin="10dp"
+                    android:layout_below="@+id/informasiTour"
+                    android:background="@color/yellow"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Penginapan"/>
-                <EditText
-                    android:id="@+id/etPenginapan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Penginapan Wisata"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:textAllCaps="true"
+                                android:textSize="15dp"
+                                android:text="Penginapan"/>
+
+                            <TextView
+                                android:id="@+id/tvPenginapan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@color/black"
+                                android:layout_marginLeft="10dp"
+                                android:textSize="15dp"
+                                android:hint="Lorem ipsum"/>
+
+                        </LinearLayout>
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Tranportasi"/>
-                <EditText
-                    android:id="@+id/etTranspotasiWisata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Transportasi Wisata"/>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Makan"/>
-                <EditText
-                    android:id="@+id/etMakanWisata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Makan Wisata"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:textAllCaps="true"
+                                android:textSize="15dp"
+                                android:text="Tranportasi"/>
+                            <TextView
+                                android:id="@+id/tvTranspotasiWisata"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:textSize="15dp"
+                                android:textColor="@color/black"
+                                android:hint="Lorem ipsum"/>
+                        </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Tiket"/>
-                <EditText
-                    android:id="@+id/etTiketWisata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Tiket Wisata"/>
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Lokasi"/>
-                <EditText
-                    android:id="@+id/etLokasi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Lokasi Wisata"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:text="Info Lain"/>
-                <EditText
-                    android:id="@+id/etLainnya"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15dp"
-                    android:hint="Tulis Info Lainnya"/>
 
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:textAllCaps="true"
+                            android:textSize="15dp"
+                            android:text="Makan"/>
+                        <TextView
+                            android:id="@+id/tvMakanWisata"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="15dp"
+                            android:textColor="@color/black"
+                            android:hint="Lorem ipsum"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:textAllCaps="true"
+                            android:textSize="15dp"
+                            android:text="Tiket"/>
+                        <TextView
+                            android:id="@+id/tvTiketWisata"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="15dp"
+                            android:textColor="@color/black"
+                            android:hint="Lorem ipsum"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textAllCaps="true"
+                        android:textSize="15dp"
+                        android:text="Lokasi"/>
+                    <TextView
+                        android:id="@+id/tvLokasi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="15dp"
+                        android:textColor="@color/black"
+                        android:hint="Lorem ipsum"/>
+                </LinearLayout>
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
     </RelativeLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

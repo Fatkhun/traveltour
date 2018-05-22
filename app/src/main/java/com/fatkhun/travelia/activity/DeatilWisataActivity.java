@@ -1,9 +1,11 @@
 package com.fatkhun.travelia.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -20,7 +23,7 @@ public class DeatilWisataActivity extends AppCompatActivity {
 
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
-    private LinearLayout linearLayout;
+    private FloatingActionButton floatingActionButton;
 
     private Menu collapsedMenu;
     private boolean appBarExpanded = true;
@@ -35,6 +38,7 @@ public class DeatilWisataActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fbRate);
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
@@ -51,12 +55,15 @@ public class DeatilWisataActivity extends AppCompatActivity {
             }
         });
 
-        linearLayout = (LinearLayout) findViewById(R.id.scrollableview);
-        //  Use when your list size is constant for better performance
-//        linearLayout.setHasFixedSize(true);
-//
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayout.setLayoutManager(linearLayoutManager);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fbRate = new Intent(getApplicationContext(), RateWisataActivity.class);
+                fbRate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(fbRate);
+            }
+        });
+
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -80,8 +87,8 @@ public class DeatilWisataActivity extends AppCompatActivity {
         if (collapsedMenu != null
                 && (!appBarExpanded || collapsedMenu.size() != 1)) {
             //collapsed
-            collapsedMenu.add("Add")
-                    .setIcon(R.drawable.ic_action_add)
+            collapsedMenu.add("Rate")
+                    .setIcon(R.drawable.ic_mood)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         } else {
             //expanded
@@ -105,8 +112,11 @@ public class DeatilWisataActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
         }
-        if (item.getTitle() == "Add") {
-            Toast.makeText(this, "clicked add", Toast.LENGTH_SHORT).show();
+        if (item.getTitle() == "Rate") {
+            Toast.makeText(this, "Tour Rating", Toast.LENGTH_SHORT).show();
+            Intent fbRate = new Intent(getApplicationContext(), RateWisataActivity.class);
+            fbRate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(fbRate);
         }
 
         return super.onOptionsItemSelected(item);

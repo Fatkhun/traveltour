@@ -22,18 +22,22 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".NavDrawerActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".AddTravelActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".DeatilWisataActivity">
+        <activity
+            android:name=".DeatilWisataActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RateWisataActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
