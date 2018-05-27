@@ -11,12 +11,13 @@
         android:scaleType="centerInside" />
 
     <TextView
+        android:id="@+id/tvResultNama"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:text="Your Name Here"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/white_70" />
 
 </FrameLayout>

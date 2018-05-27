@@ -17,10 +17,10 @@
         <LinearLayout
             android:id="@+id/nav_contentframe"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="?attr/actionBarSize"
-            android:background="@android:color/background_light">
+            android:background="@color/black_white">
 
             <include
                 android:id="@+id/actMaps"
@@ -28,7 +28,7 @@
 
             <include
                 android:id="@+id/contentWisata"
-                layout="@layout/content_daftar_wisata" />
+                layout="@layout/activity_tour_wisata" />
 
         </LinearLayout>
     </RelativeLayout>

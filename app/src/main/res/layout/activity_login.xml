@@ -47,6 +47,18 @@
             android:background="@drawable/bg_rectangle_edittext"
             android:textColor="#80FFFFFF"/>
 
+        <EditText
+            android:id="@+id/etRetypePassword"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:textColorHint="#80FFFFFF"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:background="@drawable/bg_rectangle_edittext"
+            android:textColor="#80FFFFFF"/>
+
         <Button
             android:id="@+id/btnLogin"
             android:layout_marginTop="16dp"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="button" type="id" />
+    <item name="iv_ency_detail_image" type="id">image</item>
+    <item name="item_click_support" type="id">item click support</item>
+    <item name="search" type="id">search</item>
+</resources>

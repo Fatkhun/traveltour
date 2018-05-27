@@ -26,11 +26,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fatkhun.travelia.Utils.apiuser.Constant;
+import com.fatkhun.travelia.Utils.apiuser.SharedPrefManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -88,12 +92,21 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
     int INTERVAL = 1000;
     int FASTEST_INTERVAL = 500;
     FloatingActionButton floatingActionButton;
+
+    SharedPrefManager sharedPrefManager;
+    Context mContext;
+    TextView tvResultNama;
+    String mNama;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
         setUpToolbar();
+        mContext = this;
+        sharedPrefManager = new SharedPrefManager(this);
+        tvResultNama = (TextView) findViewById(R.id.tvResultNama);
+//        tvResultNama.setText(sharedPrefManager.getSPNama());
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
 
@@ -124,6 +137,14 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
                         Intent ItemAdd = new Intent(getApplicationContext(), AddTravelActivity.class);
                         ItemAdd.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(ItemAdd);
+                        mCurrentSelectedPosition = 1;
+                        return true;
+                    case R.id.navigation_item_3:
+                        Snackbar.make(mContentFrame, "Logout", Snackbar.LENGTH_SHORT).show();
+                        sharedPrefManager.saveSPBoolean(SharedPrefManager.getSpSudahLogin(), false);
+                        startActivity(new Intent(NavDrawerActivity.this, LoginActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                        finish();
                         mCurrentSelectedPosition = 1;
                         return true;
                     default:
