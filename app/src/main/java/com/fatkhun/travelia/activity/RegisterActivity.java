@@ -14,8 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.apiuser.BaseApiService;
-import com.fatkhun.travelia.Utils.apiuser.SharedPrefManager;
 import com.fatkhun.travelia.Utils.apiuser.UtilsApi;
+import com.fatkhun.travelia.helper.SQLiteHandler;
+import com.fatkhun.travelia.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     Context mContext;
     BaseApiService mApiService;
-    SharedPrefManager sharedPrefManager;
+    private SessionManager session;
+    private SQLiteHandler db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,30 +53,41 @@ public class RegisterActivity extends AppCompatActivity {
         mContext = this;
         mApiService = UtilsApi.getAPIService();
 
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        // SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to main activity
+            startActivity(new Intent(RegisterActivity.this, NavDrawerActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
+        }
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestRegister();
+                String username = etNama.getText().toString().trim();
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+
+                if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()){
+                    requestRegister(username, email, password);
+                }else if(!isEmptyField(etNama.getText().toString())){
+                    Toast.makeText(getApplicationContext(), "Name is empty",Toast.LENGTH_LONG).show();
+                }else if (!isValidateEmail(etEmail.getText().toString())){
+                    Toast.makeText(getApplicationContext(), "Email is empty",Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "Password is empty",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
-    private void requestRegister(){
-        Boolean isFormError;
-        if (!isEmptyField(etNama.getText().toString())){
-            Toast.makeText(this, "Name is empty",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else if(!isValidateEmail(etEmail.getText().toString())){
-            Toast.makeText(this, "Email is empty",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else if (!isEmptyField(etPassword.getText().toString())){
-            Toast.makeText(this, "Password is empty",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else {
-            isFormError = false;
-        }
-
-        if (!isFormError){
+    private void requestRegister(String username, String email, String password ){
             loading = ProgressDialog.show(mContext, null, "Please Wait...", true, true);
             mApiService.registerRequest(etNama.getText().toString(),
                     etEmail.getText().toString(),
@@ -88,21 +101,47 @@ public class RegisterActivity extends AppCompatActivity {
                                 try {
                                     JSONObject jsonRESULTS = new JSONObject(response.body().string());
                                     if (jsonRESULTS.getString("success").equals("true")){
-                                        Toast.makeText(mContext, "Register Success", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(mContext, LoginActivity.class));
-                                    } else {
-                                        String error_message = jsonRESULTS.getString("message");
-                                        Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                        Boolean error = jsonRESULTS.getBoolean("success");
+
+                                        // Check for error node in json
+                                        if(!error){
+                                            // Error in login. Get the error message
+                                            String errorMsg = jsonRESULTS.getString("message");
+                                            Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                                        } else {
+
+                                            // user successfully register
+                                            // User successfully stored in MySQL
+                                            // Now store the user in sqlite
+
+                                            String username = jsonRESULTS.getString("username");
+                                            String email = jsonRESULTS.getString("email");
+                                            String password = jsonRESULTS.getString("password");
+                                            String api_token = jsonRESULTS.getString("api_token");
+
+                                            // Inserting row in users table in SQLite
+                                            db.addUser(username, email, password, api_token);
+
+                                            Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_SHORT).show();
+
+                                            // Inserting row in users table
+                                            userLogin(username, email, password, api_token);
+                                        }
+                                    }else {
+                                        // Error in login. Get the error message
+                                        String errorMsg = jsonRESULTS.getString("message");
+                                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                                     }
+
                                 } catch (JSONException e) {
-                                    String error_message = e.getMessage() + ", try again";
+                                    String error_message = e.getMessage() + ", duplicate email and try again";
                                     Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             } else {
-                                Log.i("debug", "onResponse: Register Failed");
+                                Log.i("debug", "onResponse: Register Failed or duplicate email");
                                 loading.dismiss();
                             }
                         }
@@ -113,11 +152,20 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(mContext, "Problem Connection", Toast.LENGTH_SHORT).show();
                         }
                     });
-        }
 
 
 
 
+    }
+
+    public void userLogin(String username, String email, String password, String api_token) {
+
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        intent.putExtra("api_token", api_token);
+        startActivity(intent);
     }
 
     /**

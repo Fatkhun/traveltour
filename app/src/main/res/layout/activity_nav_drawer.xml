@@ -28,7 +28,7 @@
 
             <include
                 android:id="@+id/contentWisata"
-                layout="@layout/activity_tour_wisata" />
+                layout="@layout/fragment_tour_wisata" />
 
         </LinearLayout>
     </RelativeLayout>
@@ -38,8 +38,43 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer" />
+        app:menu="@menu/drawer"
+        android:fitsSystemWindows="true">
+
+        <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/nav_header_bg"
+                android:scaleType="centerInside" />
+
+            <TextView
+                android:id="@+id/tvResultEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:textSize="20dp"
+                android:text="Your Name Email"
+                android:textColor="@color/white_70" />
+
+            <TextView
+                android:id="@+id/tvResultNama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="16dp"
+                android:textSize="20dp"
+                android:text="Your Name Here"
+                android:textColor="@color/white_70" />
+
+        </FrameLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

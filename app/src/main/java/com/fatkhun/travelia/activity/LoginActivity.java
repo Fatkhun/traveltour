@@ -15,8 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.apiuser.BaseApiService;
-import com.fatkhun.travelia.Utils.apiuser.SharedPrefManager;
 import com.fatkhun.travelia.Utils.apiuser.UtilsApi;
+import com.fatkhun.travelia.helper.SQLiteHandler;
+import com.fatkhun.travelia.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,8 +38,9 @@ public class LoginActivity extends AppCompatActivity {
 
     Context mContext;
     BaseApiService mApiService;
-    SharedPrefManager sharedPrefManager;
     String TAG = "@@@";
+    private SessionManager session;
+    private SQLiteHandler db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +48,45 @@ public class LoginActivity extends AppCompatActivity {
 
         mContext = this;
         mApiService = UtilsApi.getAPIService(); // meng-init yang ada di package apihelper
-        sharedPrefManager = new SharedPrefManager(this);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etretypePassword = (EditText) findViewById(R.id.etRetypePassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
+        //SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to main activity
+//            startActivity(new Intent(LoginActivity.this, NavDrawerActivity.class)
+//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+//            finish();
+            Intent intent = new Intent(getApplicationContext(), NavDrawerActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestLogin();
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+
+                // Check for empty data in the form
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    // login user
+                    requestLogin(email, password);
+                } else {
+                    // Prompt user to enter credentials
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter the credentials!", Toast.LENGTH_LONG)
+                            .show();
+                }
             }
         });
 
@@ -69,29 +99,29 @@ public class LoginActivity extends AppCompatActivity {
 
         // Code berikut berfungsi untuk mengecek session, Jika session true ( sudah login )
         // maka langsung memulai MainActivity.
-        if (sharedPrefManager.getSPSudahLogin()){
-            startActivity(new Intent(LoginActivity.this, NavDrawerActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
-        }
+//        if (sharedPrefManager.getSPSudahLogin()){
+//            startActivity(new Intent(LoginActivity.this, NavDrawerActivity.class)
+//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+//            finish();
+//        }
     }
 
-    private void requestLogin(){
+    private void requestLogin(final String email, final String password){
         Boolean isFormError;
-        EditText email = (EditText) findViewById(R.id.etEmail);
-        EditText password = (EditText) findViewById(R.id.etPassword);
+        EditText Email = (EditText) findViewById(R.id.etEmail);
+        EditText Password = (EditText) findViewById(R.id.etPassword);
         EditText retypePassword = (EditText) findViewById(R.id.etRetypePassword);
 
-        if (!isValidateEmail(email.getText().toString())){
+        if (!isValidateEmail(Email.getText().toString())){
             Toast.makeText(this, "Email is empty or wrong",Toast.LENGTH_LONG).show();
             isFormError = true;
-        }else if (!isEmptyField(password.getText().toString())){
+        }else if (!isEmptyField(Password.getText().toString())){
             Toast.makeText(this, "Password is empty",Toast.LENGTH_LONG).show();
             isFormError = true;
         }else if (!isEmptyField(retypePassword.getText().toString())) {
             Toast.makeText(this, "Confirm password is empty", Toast.LENGTH_LONG).show();
             isFormError = true;
-        }else if (!isMatch(retypePassword.getText().toString(), password.getText().toString())){
+        }else if (!isMatch(retypePassword.getText().toString(), Password.getText().toString())){
             Toast.makeText(this, "Password is wrong",Toast.LENGTH_LONG).show();
             isFormError = true;
         }else {
@@ -108,20 +138,38 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     JSONObject jsonRESULTS = new JSONObject(response.body().string());
                                     if (jsonRESULTS.getString("success").equals("true")){
-
                                         if (jsonRESULTS.getString("password") == String.valueOf(jsonRESULTS.getString("password"))){
-                                            // Jika login berhasil maka data nama yang ada di response API
-                                            // akan diparsing ke activity selanjutnya.
-                                            Toast.makeText(mContext, "Login Success", Toast.LENGTH_SHORT).show();
-                                            String nama = jsonRESULTS.getString("username");
-                                            sharedPrefManager.saveSPString(SharedPrefManager.SP_NAMA, nama);
-                                            Log.i(TAG, "onResponse: NAMA " + sharedPrefManager.getSPNama());
-                                            // Shared Pref ini berfungsi untuk menjadi trigger session login
-                                            sharedPrefManager.saveSPBoolean(SharedPrefManager.getSpSudahLogin(), true);
-                                            Intent intent = new Intent(mContext, NavDrawerActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                            finish();
+//                                            // Jika login berhasil maka data nama yang ada di response API
+//                                            // akan diparsing ke activity selanjutnya.
+//                                            Toast.makeText(mContext, "Login Success", Toast.LENGTH_SHORT).show();
+//                                            String nama = jsonRESULTS.getString("username");
+//                                            sharedPrefManager.saveSPString(SharedPrefManager.SP_NAMA, nama);
+//                                            Log.i(TAG, "onResponse: NAMA " + sharedPrefManager.getSPNama());
+//                                            // Shared Pref ini berfungsi untuk menjadi trigger session login
+//                                            sharedPrefManager.saveSPBoolean(SharedPrefManager.getSpSudahLogin(), true);
+                                            Boolean error = jsonRESULTS.getBoolean("success");
+                                            if(!error){
+                                                session.setLogin(false);
+                                                String errorMsg = jsonRESULTS.getString("message");
+                                                Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                // Create login session true
+                                                session.setLogin(true);
+                                                // user successfully logged in
+                                                String errorMsg = jsonRESULTS.getString("message");
+
+                                                // Now store the user in SQLite
+                                                String username = jsonRESULTS.getString("username");
+                                                String email = jsonRESULTS.getString("email");
+                                                String password = jsonRESULTS.getString("password");
+                                                String api_token = jsonRESULTS.getString("api_token");
+
+                                                // Inserting row in users table in SQLite
+                                                db.addUser(username, email, password, api_token);
+                                                userLogin(username, email, password, api_token);
+                                                Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                                            }
+
                                         }
                                     } else {
                                         // Jika login gagal
@@ -148,6 +196,18 @@ public class LoginActivity extends AppCompatActivity {
                     });
         }
 
+    }
+
+    public void userLogin(String username, String email, String password, String api_token) {
+
+        Intent intent = new Intent(mContext, NavDrawerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("username", username);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        intent.putExtra("api_token", api_token);
+        startActivity(intent);
+        finish();
     }
 
     /**

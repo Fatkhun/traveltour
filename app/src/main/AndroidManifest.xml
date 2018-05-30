@@ -19,28 +19,27 @@
 
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".NavDrawerActivity"
             android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
+
         <activity
-            android:name=".AddTravelActivity"
+            android:name=".NavDrawerActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".DeatilWisataActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".RateWisataActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".TourWisataListActivity" />
+        <activity
+            android:name=".TabNavigationActivity"
+            android:label="@string/title_activity_tab_navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".TourWisataListActivity">
         </activity>
     </application>
 

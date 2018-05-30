@@ -1,7 +1,6 @@
 package com.fatkhun.travelia.activity;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -23,18 +22,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fatkhun.travelia.Utils.apiuser.Constant;
-import com.fatkhun.travelia.Utils.apiuser.SharedPrefManager;
+import com.fatkhun.travelia.helper.SQLiteHandler;
+import com.fatkhun.travelia.helper.SessionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -56,6 +51,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashMap;
 
 
 public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -93,10 +90,10 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
     int FASTEST_INTERVAL = 500;
     FloatingActionButton floatingActionButton;
 
-    SharedPrefManager sharedPrefManager;
     Context mContext;
-    TextView tvResultNama;
-    String mNama;
+    TextView tvResultNama, tvResultEmail;
+    private SQLiteHandler db;
+    private SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,9 +101,29 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
 
         setUpToolbar();
         mContext = this;
-        sharedPrefManager = new SharedPrefManager(this);
         tvResultNama = (TextView) findViewById(R.id.tvResultNama);
+        tvResultEmail = (TextView) findViewById(R.id.tvResultEmail);
 //        tvResultNama.setText(sharedPrefManager.getSPNama());
+
+        // SqLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
+
+        if (!session.isLoggedIn()) {
+            logoutUser();
+        }
+
+        // Fetching user details from sqlite
+        HashMap<String, String> user = db.getUserDetails();
+
+        String email = user.get("email");
+        String name = user.get("username");
+
+        // Displaying the user details on the screen
+        tvResultEmail.setText(email);
+        tvResultNama.setText(name);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
 
@@ -133,18 +150,8 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
                         mCurrentSelectedPosition = 0;
                         return true;
                     case R.id.navigation_item_2:
-                        Snackbar.make(mContentFrame, "Tambah Wisata", Snackbar.LENGTH_SHORT).show();
-                        Intent ItemAdd = new Intent(getApplicationContext(), AddTravelActivity.class);
-                        ItemAdd.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(ItemAdd);
-                        mCurrentSelectedPosition = 1;
-                        return true;
-                    case R.id.navigation_item_3:
                         Snackbar.make(mContentFrame, "Logout", Snackbar.LENGTH_SHORT).show();
-                        sharedPrefManager.saveSPBoolean(SharedPrefManager.getSpSudahLogin(), false);
-                        startActivity(new Intent(NavDrawerActivity.this, LoginActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                        finish();
+                        logoutUser();
                         mCurrentSelectedPosition = 1;
                         return true;
                     default:
@@ -208,6 +215,21 @@ public class NavDrawerActivity extends AppCompatActivity implements OnMapReadyCa
                 getCurrentLocation();
             }
         });
+    }
+
+    /**
+     * Logging out the user. Will set isLoggedIn flag to false in shared
+     * preferences Clears the user data from sqlite users table
+     * */
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        // Launching the login activity
+        startActivity(new Intent(NavDrawerActivity.this, LoginActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+        finish();
     }
 
     @Override

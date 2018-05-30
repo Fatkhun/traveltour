@@ -3,22 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TourWisataActivity">
+    android:layout_height="wrap_content"
+    android:background="@color/amber_50"
+    tools:context=".TourWisataFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_swipe_down_info"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/divider_horizontal_bright"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
             android:text="@string/swipe_down_info"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,8 +26,9 @@
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/srl_list"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_below="@+id/tv_swipe_down_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_swipe_down_info"
             app:layout_constraintStart_toStartOf="@+id/tv_swipe_down_info"
@@ -41,6 +41,6 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

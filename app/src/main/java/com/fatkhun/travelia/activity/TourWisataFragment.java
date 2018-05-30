@@ -1,13 +1,11 @@
 package com.fatkhun.travelia.activity;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,15 +33,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TourWisataActivity extends android.support.v4.app.Fragment {
+public class TourWisataFragment extends android.support.v4.app.Fragment {
 
-    public TourWisataActivity(){}
+    public TourWisataFragment(){}
 
     /**
      *
      */
     public static final String KEY_TOURWISATA = "key_tourwisata";
-    private static final String TAG = "TourWisataActivity";
+    private static final String TAG = "TourWisataFragment";
     /**
      *
      */
@@ -163,7 +161,7 @@ public class TourWisataActivity extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewRoot = inflater.inflate(R.layout.activity_tour_wisata, container, false);
+        View viewRoot = inflater.inflate(R.layout.fragment_tour_wisata, container, false);
         if (savedInstanceState != null) {
             mTourWisatas = savedInstanceState.getParcelableArrayList(KEY_TOURWISATA);
         } else {
@@ -202,16 +200,16 @@ public class TourWisataActivity extends android.support.v4.app.Fragment {
             mCall.enqueue(mCallback);
         });
 
-        RecyclerView plantRecyclerView = viewRoot.findViewById(R.id.rv_list);
-        plantRecyclerView.setHasFixedSize(true);
+        RecyclerView wisataRecyclerView = viewRoot.findViewById(R.id.rv_list);
+        wisataRecyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        plantRecyclerView.setLayoutManager(layoutManager);
+        wisataRecyclerView.setLayoutManager(layoutManager);
 
         mTourWisataAdapter = new TourWisataAdapter(mTourWisatas);
-        plantRecyclerView.setAdapter(mTourWisataAdapter);
+        wisataRecyclerView.setAdapter(mTourWisataAdapter);
 
-        ItemClickSupportUtils.addTo(plantRecyclerView)
+        ItemClickSupportUtils.addTo(wisataRecyclerView)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     Intent WisataDetailIntent = new Intent(mContext, DeatilWisataActivity.class);
                     TourWisata tourWisata = mTourWisatas.get(position);
