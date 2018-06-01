@@ -1,16 +1,22 @@
 package com.fatkhun.travelia.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fatkhun.travelia.Utils.ItemClickSupportUtils;
@@ -25,6 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -34,7 +43,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TourWisataFragment extends android.support.v4.app.Fragment {
-
+    private Boolean isFabOpen = false;
+    private FloatingActionButton fab,fab1,fab2;
+    private LinearLayout layoutHigh, layoutLow;
+    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     public TourWisataFragment(){}
 
     /**
@@ -168,6 +180,36 @@ public class TourWisataFragment extends android.support.v4.app.Fragment {
             mTourWisatas = new ArrayList<>();
         }
 
+        fab = (FloatingActionButton) viewRoot.findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) viewRoot.findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) viewRoot.findViewById(R.id.fab2);
+        layoutHigh = (LinearLayout) viewRoot.findViewById(R.id.layoutFabHigh);
+        layoutLow = (LinearLayout) viewRoot.findViewById(R.id.layoutFabLow);
+        fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getActivity(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_backward);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateFAB();
+            }
+        });
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortLowPrice();
+                mTourWisataAdapter.notifyDataSetChanged();
+            }
+        });
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortHighPrice();
+                mTourWisataAdapter.notifyDataSetChanged();
+            }
+        });
+
         mTourWisataService = (TourWisataService) NetworkUtils.fetchUrl(BASE_URL, TourWisataService.class);
 
         mTvSwipeDownInfo = viewRoot.findViewById(R.id.tv_swipe_down_info);
@@ -231,6 +273,69 @@ public class TourWisataFragment extends android.support.v4.app.Fragment {
 
         return viewRoot;
     }
+
+    public void animateFAB(){
+
+        if(isFabOpen){
+
+            fab.startAnimation(rotate_backward);
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            layoutHigh.startAnimation(fab_close);
+            layoutLow.startAnimation(fab_close);
+            layoutHigh.setClickable(false);
+            layoutLow.setClickable(false);
+            isFabOpen = false;
+            Log.d("Raj", "close");
+
+        } else {
+
+            fab.startAnimation(rotate_forward);
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            layoutHigh.startAnimation(fab_open);
+            layoutLow.startAnimation(fab_open);
+            layoutHigh.setClickable(true);
+            layoutLow.setClickable(true);
+            isFabOpen = true;
+            Log.d("Raj","open");
+
+        }
+    }
+
+
+    /*
+     * SORT
+     */
+    private void sortLowPrice()
+    {
+        Collections.sort(mTourWisatas, new Comparator<TourWisata>() {
+            @Override
+            public int compare(TourWisata o1, TourWisata o2) {
+                int b1 = o1.getHarga();
+                int b2 = o2.getHarga();
+                return Integer.compare(b1, b2);
+            }
+        });
+    }
+
+    private void sortHighPrice()
+    {
+        Collections.sort(mTourWisatas, new Comparator<TourWisata>() {
+            @Override
+            public int compare(TourWisata o1, TourWisata o2) {
+                int b1 = o1.getHarga();
+                int b2 = o2.getHarga();
+                return Integer.compare(b2, b1);
+            }
+        });
+    }
+
+
 
     @Override
     public void onResume() {

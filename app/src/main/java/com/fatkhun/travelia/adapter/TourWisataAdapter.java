@@ -1,6 +1,7 @@
 package com.fatkhun.travelia.adapter;
 
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.fatkhun.travelia.activity.R;
 import com.fatkhun.travelia.model.TourWisata;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TourWisataAdapter extends RecyclerView.Adapter<TourWisataAdapter.TourWisataHolder> {
     private static final String BASE_IMAGE_URL = "http://192.168.43.36:8000/uploads/file/";
@@ -61,6 +63,7 @@ public class TourWisataAdapter extends RecyclerView.Adapter<TourWisataAdapter.To
     public int getItemCount() {
         return mTourWisatas.size();
     }
+
 
     public void setTourWisatas(ArrayList<TourWisata> mTourWisatas) {
         this.mTourWisatas = mTourWisatas;

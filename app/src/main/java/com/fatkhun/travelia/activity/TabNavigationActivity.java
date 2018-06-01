@@ -17,7 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fatkhun.travelia.model.TourWisata;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class TabNavigationActivity extends AppCompatActivity {
@@ -36,6 +45,7 @@ public class TabNavigationActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    public static ArrayList<TourWisata> tourList = new ArrayList<TourWisata>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +83,11 @@ public class TabNavigationActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

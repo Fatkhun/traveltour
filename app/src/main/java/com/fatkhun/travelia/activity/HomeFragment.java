@@ -1,15 +1,20 @@
 package com.fatkhun.travelia.activity;
 
+import android.animation.Animator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,7 +25,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fatkhun.travelia.Utils.ItemClickSupportUtils;
@@ -46,7 +56,10 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
-
+    private LinearLayout fabContainer;
+    private Animation fab1_show, fab1_hide;
+    private FloatingActionButton fab, fab1;
+    private boolean fabMenuOpen = false;
     /**
      *
      */
@@ -180,6 +193,7 @@ public class HomeFragment extends Fragment {
         }
 
         initCollapsingToolbar();
+
         mTourWisataService = (TourWisataService) NetworkUtils.fetchUrl(BASE_URL, TourWisataService.class);
 
         mTvSwipeDownInfo = viewRoot.findViewById(R.id.tv_swipe_down_info);
@@ -350,6 +364,5 @@ public class HomeFragment extends Fragment {
         super.onPause();
         mNetworkConnectivityObserver.dispose();
     }
-
 
 }
