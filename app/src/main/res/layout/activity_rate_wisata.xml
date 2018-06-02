@@ -39,6 +39,15 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etNameFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Nama"
+        android:inputType="textMultiLine"/>
+
+    <EditText
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

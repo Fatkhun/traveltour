@@ -11,11 +11,12 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fatkhun.travelia.Utils.apiuser.BaseApiService;
-import com.fatkhun.travelia.Utils.apiuser.UtilsApi;
+import com.fatkhun.travelia.Utils.ApiClient;
+import com.fatkhun.travelia.Utils.PrefUtils;
+import com.fatkhun.travelia.model.User;
+import com.fatkhun.travelia.service.BaseApiService;
 import com.fatkhun.travelia.helper.SQLiteHandler;
 import com.fatkhun.travelia.helper.SessionManager;
 
@@ -23,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mContext = this;
-        mApiService = UtilsApi.getAPIService(); // meng-init yang ada di package apihelper
+        mApiService = ApiClient.getClient(getApplicationContext()).create(BaseApiService.class); // meng-init yang ada di package apihelper
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etretypePassword = (EditText) findViewById(R.id.etRetypePassword);
@@ -63,12 +64,27 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-//            startActivity(new Intent(LoginActivity.this, NavDrawerActivity.class)
-//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-//            finish();
-            Intent intent = new Intent(getApplicationContext(), NavDrawerActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TabNavigationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
+        }
+
+        /**
+         * Check for stored Api Key in shared preferences
+         * If not present, make api call to register the user
+         * This will be executed when app is installed for the first time
+         * or data is cleared from settings
+         * */
+        if (TextUtils.isEmpty(PrefUtils.getApiKey(this))) {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+            requestLogin(email, password);
+        } else {
+            // user is already registered, fetch all notes
+//            Intent intent = new Intent(getApplicationContext(), TabNavigationActivity.class);
+//            startActivity(intent);
+//            finish();
         }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -97,13 +113,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Code berikut berfungsi untuk mengecek session, Jika session true ( sudah login )
-        // maka langsung memulai MainActivity.
-//        if (sharedPrefManager.getSPSudahLogin()){
-//            startActivity(new Intent(LoginActivity.this, NavDrawerActivity.class)
-//                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-//            finish();
-//        }
     }
 
     private void requestLogin(final String email, final String password){
@@ -139,14 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject jsonRESULTS = new JSONObject(response.body().string());
                                     if (jsonRESULTS.getString("success").equals("true")){
                                         if (jsonRESULTS.getString("password") == String.valueOf(jsonRESULTS.getString("password"))){
-//                                            // Jika login berhasil maka data nama yang ada di response API
-//                                            // akan diparsing ke activity selanjutnya.
-//                                            Toast.makeText(mContext, "Login Success", Toast.LENGTH_SHORT).show();
-//                                            String nama = jsonRESULTS.getString("username");
-//                                            sharedPrefManager.saveSPString(SharedPrefManager.SP_NAMA, nama);
-//                                            Log.i(TAG, "onResponse: NAMA " + sharedPrefManager.getSPNama());
-//                                            // Shared Pref ini berfungsi untuk menjadi trigger session login
-//                                            sharedPrefManager.saveSPBoolean(SharedPrefManager.getSpSudahLogin(), true);
+//
                                             Boolean error = jsonRESULTS.getBoolean("success");
                                             if(!error){
                                                 session.setLogin(false);
@@ -158,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 // user successfully logged in
                                                 String errorMsg = jsonRESULTS.getString("message");
 
+
                                                 // Now store the user in SQLite
                                                 String username = jsonRESULTS.getString("username");
                                                 String email = jsonRESULTS.getString("email");
@@ -166,6 +169,17 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 // Inserting row in users table in SQLite
                                                 db.addUser(username, email, password, api_token);
+                                                HashMap<String, String> user = db.getUserDetails();
+                                                String apitoken = user.get("api_token");
+                                                Log.i(TAG, "onResponse: @@@ " + apitoken);
+                                                User users = new User();
+                                                // Storing user API Key in preferences
+                                                PrefUtils.storeApiKey(getApplicationContext(), user.get("api_token"));
+                                                Log.i(TAG, "onResponse: @@@" + PrefUtils.getApiKey(getApplicationContext()));
+
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Device is registered successfully! ApiKey: " + PrefUtils.getApiKey(getApplicationContext()),
+                                                        Toast.LENGTH_LONG).show();
                                                 userLogin(username, email, password, api_token);
                                                 Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
                                             }
@@ -200,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void userLogin(String username, String email, String password, String api_token) {
 
-        Intent intent = new Intent(mContext, NavDrawerActivity.class);
+        Intent intent = new Intent(mContext, TabNavigationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("username", username);
         intent.putExtra("email", email);

@@ -1,4 +1,4 @@
-package com.fatkhun.travelia.Utils.apiuser;
+package com.fatkhun.travelia.service;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -23,8 +23,8 @@ public interface BaseApiService {
                                        @Field("password") String password);
 
     @FormUrlEncoded
-    @POST("profile/update")
-    Call<ResponseBody> profileRequest(
-                                         @Field("first_name") String first_name,
-                                         @Field("last_name") String last_name);
+    @POST("rating/store")
+    Call<ResponseBody> reviewRequest(
+                                         @Field("nama") String nama,
+                                         @Field("review") String review);
 }

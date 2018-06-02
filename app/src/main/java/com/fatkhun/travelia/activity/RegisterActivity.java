@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fatkhun.travelia.Utils.apiuser.BaseApiService;
-import com.fatkhun.travelia.Utils.apiuser.UtilsApi;
+import com.fatkhun.travelia.Utils.ApiClient;
+import com.fatkhun.travelia.service.BaseApiService;
 import com.fatkhun.travelia.helper.SQLiteHandler;
 import com.fatkhun.travelia.helper.SessionManager;
 
@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
         mContext = this;
-        mApiService = UtilsApi.getAPIService();
+        mApiService = ApiClient.getClient(getApplicationContext()).create(BaseApiService.class);
 
         // Session manager
         session = new SessionManager(getApplicationContext());
@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            startActivity(new Intent(RegisterActivity.this, NavDrawerActivity.class)
+            startActivity(new Intent(RegisterActivity.this, TabNavigationActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         }
