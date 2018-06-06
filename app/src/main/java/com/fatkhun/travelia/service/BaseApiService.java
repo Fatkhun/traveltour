@@ -23,8 +23,9 @@ public interface BaseApiService {
                                        @Field("password") String password);
 
     @FormUrlEncoded
-    @POST("rating/store")
-    Call<ResponseBody> reviewRequest(
-                                         @Field("nama") String nama,
-                                         @Field("review") String review);
+    @POST("rating/store/")
+    Call<ResponseBody> reviewRequest( @Field("api_token") String api_token,
+                                      @Field("nama") String nama,
+                                      @Field("rating") float rating,
+                                      @Field("review") String review);
 }

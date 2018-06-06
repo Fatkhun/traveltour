@@ -169,17 +169,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 // Inserting row in users table in SQLite
                                                 db.addUser(username, email, password, api_token);
-                                                HashMap<String, String> user = db.getUserDetails();
-                                                String apitoken = user.get("api_token");
-                                                Log.i(TAG, "onResponse: @@@ " + apitoken);
-                                                User users = new User();
-                                                // Storing user API Key in preferences
-                                                PrefUtils.storeApiKey(getApplicationContext(), user.get("api_token"));
-                                                Log.i(TAG, "onResponse: @@@" + PrefUtils.getApiKey(getApplicationContext()));
-
-                                                Toast.makeText(getApplicationContext(),
-                                                        "Device is registered successfully! ApiKey: " + PrefUtils.getApiKey(getApplicationContext()),
-                                                        Toast.LENGTH_LONG).show();
                                                 userLogin(username, email, password, api_token);
                                                 Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
                                             }

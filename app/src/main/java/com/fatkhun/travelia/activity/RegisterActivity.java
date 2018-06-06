@@ -166,6 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
         intent.putExtra("password", password);
         intent.putExtra("api_token", api_token);
         startActivity(intent);
+        finish();
     }
 
     /**
