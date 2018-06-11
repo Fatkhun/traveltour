@@ -18,6 +18,16 @@
         android:textSize="20sp"
         android:textStyle="italic" />
 
+    <TextView
+        android:id="@+id/tvNamaWisataRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="Taman Wisata"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
@@ -44,8 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Nama"
-        android:inputType="textMultiLine"/>
+        android:gravity="top"
+        android:background="#eaeaea"
+        android:padding="5dp"
+        android:hint="Nama kamu"
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/etFeedback"
@@ -54,6 +67,8 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:gravity="top"
+        android:background="#eaeaea"
+        android:padding="5dp"
         android:hint="Ceritakan tour travelmu disini"
         android:inputType="textMultiLine"
         android:lines="5" />
@@ -65,6 +80,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/indigo"
         android:text="Kirim"
+        android:shadowRadius="@integer/google_play_services_version"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

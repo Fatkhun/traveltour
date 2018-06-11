@@ -39,7 +39,7 @@ public class RateWisataActivity extends AppCompatActivity {
     private Button btnSendFeedback;
 
     private EditText etFeedback, etNameFeedback;
-    private TextView tvRateMessage;
+    private TextView tvRateMessage, tvNamaWisataRate;
 
     private float ratedValue;
 
@@ -62,6 +62,7 @@ public class RateWisataActivity extends AppCompatActivity {
         etNameFeedback = (EditText) findViewById(R.id.etNameFeedback);
 
         tvRateMessage = (TextView) findViewById(R.id.tvRatingScale);
+        tvNamaWisataRate = (TextView) findViewById(R.id.tvNamaWisataRate);
 
         btnSendFeedback = (Button) findViewById(R.id.btnSubmit);
 
@@ -82,6 +83,11 @@ public class RateWisataActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Intent intents = getIntent();
+        String namaWisata = intents.getStringExtra("nama_wisata");
+
+        tvNamaWisataRate.setText(namaWisata);
 
         mContext = this;
         mApiService = ApiClient.getClient(getApplicationContext()).create(BaseApiService.class);
@@ -122,6 +128,7 @@ public class RateWisataActivity extends AppCompatActivity {
                 String name = etNameFeedback.getText().toString().trim();
                 String message = etFeedback.getText().toString().trim();
                 float ratingbar = ratingBar.getRating();
+
                 if (!name.isEmpty() && !message.isEmpty()){
                     requestReview(apitoken, name, ratingbar, message);
                 }else if(!isEmptyField(etNameFeedback.getText().toString())){
@@ -137,7 +144,7 @@ public class RateWisataActivity extends AppCompatActivity {
 
     private void requestReview(String apitoken, String name, float ratingbar, String message) {
         loading = ProgressDialog.show(mContext, null, "Please Wait...", true, true);
-        mApiService.reviewRequest(apitoken, name, ratingbar, message)
+        mApiService.reviewRequest(apitoken, tvNamaWisataRate.getText().toString().trim(), name, ratingbar, message)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

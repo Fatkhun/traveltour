@@ -129,9 +129,14 @@ public class TabNavigationActivity extends AppCompatActivity {
                         mCurrentSelectedPosition = 0;
                         return true;
                     case R.id.navigation_item_2:
+                        Snackbar.make(mContentFrame, "Rate", Snackbar.LENGTH_SHORT).show();
+                        ListUserRate();
+                        mCurrentSelectedPosition = 1;
+                        return true;
+                    case R.id.navigation_item_3:
                         Snackbar.make(mContentFrame, "Logout", Snackbar.LENGTH_SHORT).show();
                         logoutUser();
-                        mCurrentSelectedPosition = 1;
+                        mCurrentSelectedPosition = 2;
                         return true;
                     default:
                         return true;
@@ -151,6 +156,12 @@ public class TabNavigationActivity extends AppCompatActivity {
 
 
 
+    }
+    // intent daftar user rate
+    private void ListUserRate() {
+        Intent intentRate = new Intent(getApplicationContext(), UserRateActivity.class);
+        intentRate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intentRate);
     }
 
     /**

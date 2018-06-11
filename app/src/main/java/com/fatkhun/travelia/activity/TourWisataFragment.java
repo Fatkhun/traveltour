@@ -1,12 +1,22 @@
 package com.fatkhun.travelia.activity;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.ItemClickSupportUtils;
 import com.fatkhun.travelia.Utils.NetworkUtils;
@@ -29,6 +42,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,10 +57,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TourWisataFragment extends android.support.v4.app.Fragment {
-    private Boolean isFabOpen = false;
-    private FloatingActionButton fab,fab1,fab2;
-    private LinearLayout layoutHigh, layoutLow;
-    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private LinearLayout tapactionlayout;
+    private RelativeLayout laylowprice, layhighprice;
+    private ImageView imglowprice, imghighprice;
+    private BottomSheetBehavior mBottomSheetBehavior1;
+    private View bottomSheet;
+    private TextView tapactionview;
     public TourWisataFragment(){}
 
     /**
@@ -180,35 +196,72 @@ public class TourWisataFragment extends android.support.v4.app.Fragment {
             mTourWisatas = new ArrayList<>();
         }
 
-        fab = (FloatingActionButton) viewRoot.findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) viewRoot.findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) viewRoot.findViewById(R.id.fab2);
-        layoutHigh = (LinearLayout) viewRoot.findViewById(R.id.layoutFabHigh);
-        layoutLow = (LinearLayout) viewRoot.findViewById(R.id.layoutFabLow);
-        fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getActivity(),R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getActivity(),R.anim.rotate_backward);
-        fab.setOnClickListener(new View.OnClickListener() {
+        tapactionlayout = (LinearLayout) viewRoot.findViewById(R.id.tap_action_layout);
+        tapactionview = (TextView) viewRoot.findViewById(R.id.tvtapaction);
+        imglowprice = (ImageView) viewRoot.findViewById(R.id.imglowprice);
+        imghighprice = (ImageView) viewRoot.findViewById(R.id.imghighprice);
+        layhighprice = (RelativeLayout) viewRoot.findViewById(R.id.relativehighprice);
+        laylowprice = (RelativeLayout) viewRoot.findViewById(R.id.relativelowprice);
+        bottomSheet = (View) viewRoot.findViewById(R.id.bottom_sheet1);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior1.setPeekHeight(120);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior1.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onClick(View v) {
-                animateFAB();
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    tapactionlayout.setVisibility(View.VISIBLE);
+                }
+
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    tapactionview.setText("Tap to hide");
+                    tapactionlayout.setVisibility(View.VISIBLE);
+                }
+
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    tapactionview.setText("Tap to show");
+                    tapactionlayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
-        fab1.setOnClickListener(new View.OnClickListener() {
+
+        tapactionlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mBottomSheetBehavior1.getState()==BottomSheetBehavior.STATE_COLLAPSED){
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }else if (mBottomSheetBehavior1.getState()==BottomSheetBehavior.STATE_EXPANDED){
+                    tapactionview.setText("Tap to show");
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }else {
+                    tapactionview.setText("Tap to show");
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_DRAGGING);
+                }
+            }
+        });
+
+
+        laylowprice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortLowPrice();
                 mTourWisataAdapter.notifyDataSetChanged();
             }
         });
-        fab2.setOnClickListener(new View.OnClickListener() {
+
+        layhighprice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortHighPrice();
                 mTourWisataAdapter.notifyDataSetChanged();
             }
         });
+
 
         mTourWisataService = (TourWisataService) NetworkUtils.fetchUrl(BASE_URL, TourWisataService.class);
 
@@ -274,45 +327,13 @@ public class TourWisataFragment extends android.support.v4.app.Fragment {
         return viewRoot;
     }
 
-    public void animateFAB(){
-
-        if(isFabOpen){
-
-            fab.startAnimation(rotate_backward);
-            fab1.startAnimation(fab_close);
-            fab2.startAnimation(fab_close);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
-            layoutHigh.startAnimation(fab_close);
-            layoutLow.startAnimation(fab_close);
-            layoutHigh.setClickable(false);
-            layoutLow.setClickable(false);
-            isFabOpen = false;
-            Log.d("Raj", "close");
-
-        } else {
-
-            fab.startAnimation(rotate_forward);
-            fab1.startAnimation(fab_open);
-            fab2.startAnimation(fab_open);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            layoutHigh.startAnimation(fab_open);
-            layoutLow.startAnimation(fab_open);
-            layoutHigh.setClickable(true);
-            layoutLow.setClickable(true);
-            isFabOpen = true;
-            Log.d("Raj","open");
-
-        }
-    }
-
 
     /*
      * SORT
      */
     private void sortLowPrice()
     {
+        Toast.makeText(getActivity(),"Low Price", Toast.LENGTH_SHORT).show();
         Collections.sort(mTourWisatas, new Comparator<TourWisata>() {
             @Override
             public int compare(TourWisata o1, TourWisata o2) {
@@ -325,6 +346,7 @@ public class TourWisataFragment extends android.support.v4.app.Fragment {
 
     private void sortHighPrice()
     {
+        Toast.makeText(getActivity(),"High Price", Toast.LENGTH_SHORT).show();
         Collections.sort(mTourWisatas, new Comparator<TourWisata>() {
             @Override
             public int compare(TourWisata o1, TourWisata o2) {

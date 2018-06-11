@@ -25,12 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.GlideApp;
+import com.fatkhun.travelia.model.TourWisata;
+
+import java.util.ArrayList;
 
 public class DeatilWisataActivity extends AppCompatActivity {
 
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
     private FloatingActionButton floatingActionButton;
+    private ArrayList<TourWisata> mTourWisatas;
 
     private Menu collapsedMenu;
     private boolean appBarExpanded = true;
@@ -69,7 +73,12 @@ public class DeatilWisataActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = getIntent();
+                String nama = intent.getStringExtra("nama");
+
+                Toast.makeText(getApplicationContext(), "Tour Rating", Toast.LENGTH_SHORT).show();
                 Intent fbRate = new Intent(getApplicationContext(), RateWisataActivity.class);
+                fbRate.putExtra("nama_wisata", nama);
                 fbRate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(fbRate);
             }
@@ -172,8 +181,12 @@ public class DeatilWisataActivity extends AppCompatActivity {
                 return true;
         }
         if (item.getTitle() == "Rate") {
+            Intent intent = getIntent();
+            String nama = intent.getStringExtra("nama");
+
             Toast.makeText(this, "Tour Rating", Toast.LENGTH_SHORT).show();
             Intent fbRate = new Intent(getApplicationContext(), RateWisataActivity.class);
+            fbRate.putExtra("nama_wisata", nama);
             fbRate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(fbRate);
         }

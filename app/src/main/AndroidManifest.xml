@@ -19,9 +19,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
-
+            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
         <activity
             android:name=".NavDrawerActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -40,9 +38,8 @@
         <activity android:name=".TourWisataListActivity" />
         <activity
             android:name=".TabNavigationActivity"
-            android:label="@string/title_activity_tab_navigation">
-
-        </activity>
+            android:label="@string/title_activity_tab_navigation"></activity>
+        <activity android:name=".UserRateActivity"></activity>
     </application>
 
 </manifest>
