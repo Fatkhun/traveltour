@@ -156,7 +156,7 @@ public class DeatilWisataActivity extends AppCompatActivity {
                 && (!appBarExpanded || collapsedMenu.size() != 1)) {
             //collapsed
             collapsedMenu.add("Rate")
-                    .setIcon(R.drawable.ic_mood)
+                    .setIcon(R.drawable.ic_star_half)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         } else {
             //expanded

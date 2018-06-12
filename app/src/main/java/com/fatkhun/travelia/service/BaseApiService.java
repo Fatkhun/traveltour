@@ -34,4 +34,6 @@ public interface BaseApiService {
                                       @Field("nama") String nama,
                                       @Field("rating") float rating,
                                       @Field("review") String review);
+    @GET("rating/destroy/{id}/")
+    Call<ResponseBody> deteleRate(@Path("id") int id, @Query("api_token") String api_token);
 }

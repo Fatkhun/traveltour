@@ -18,6 +18,7 @@ import java.util.List;
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingViewHolder> {
 
     private ArrayList<Rating> mRateWisatas;
+    private RatingAdapter ratingAdapter;
 
     public RatingAdapter(ArrayList<Rating> mRateWisatas) {
         this.mRateWisatas = mRateWisatas;
@@ -36,12 +37,10 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         TextView tvWisataNama = holder.namaWisata;
         TextView tvWisataNamaUser = holder.namaUser;
         TextView tvWisataRateStar = holder.rateStar;
-        TextView tvWisataFeedback = holder.feedbackUser;
 
         tvWisataNama.setText(mRateWisatas.get(position).getNama_wisata());
         tvWisataNamaUser.setText(mRateWisatas.get(position).getNama());
         tvWisataRateStar.setText(Integer.toString(mRateWisatas.get(position).getRating()));
-        tvWisataFeedback.setText(mRateWisatas.get(position).getReview());
 
         holder.itemView.setOnClickListener(view -> Toast.makeText(
                 holder.itemView.getContext(),
@@ -55,15 +54,18 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         return mRateWisatas.size();
     }
 
+    public void rate(int position){
+        mRateWisatas.get(position).getId();
+    }
+
     public class RatingViewHolder extends RecyclerView.ViewHolder {
-        private TextView namaWisata, namaUser , rateStar, feedbackUser;
+        private TextView namaWisata, namaUser , rateStar;
         public RatingViewHolder(View view){
             super(view);
 
             namaWisata = (TextView) view.findViewById(R.id.tv_nama_wisata_rate);
             namaUser = (TextView) view.findViewById(R.id.tv_nama_user_rate);
             rateStar = (TextView) view.findViewById(R.id.tv_wisata_stars_rate);
-            feedbackUser = (TextView) view.findViewById(R.id.tv_wisata_feedback_rate);
         }
     }
 }

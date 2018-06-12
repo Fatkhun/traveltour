@@ -1,33 +1,40 @@
 package com.fatkhun.travelia.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.ItemClickSupportUtils;
 import com.fatkhun.travelia.Utils.NetworkUtils;
-import com.fatkhun.travelia.adapter.HomeWisataAdapter;
 import com.fatkhun.travelia.adapter.RatingAdapter;
 import com.fatkhun.travelia.helper.SQLiteHandler;
 import com.fatkhun.travelia.model.Rating;
 import com.fatkhun.travelia.model.TourWisata;
+import com.fatkhun.travelia.service.BaseApiService;
 import com.fatkhun.travelia.service.RatingService;
-import com.fatkhun.travelia.service.TourWisataService;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.json.JSONArray;
@@ -40,6 +47,7 @@ import java.util.HashMap;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +55,7 @@ import retrofit2.Response;
 
 public class ListRateFragment extends Fragment {
     private SQLiteHandler db;
+
     /**
      *
      */
@@ -213,35 +222,28 @@ public class ListRateFragment extends Fragment {
         wisataRecyclerView.setItemAnimator(new DefaultItemAnimator());
         wisataRecyclerView.setAdapter(mRateWisataAdapter);
 
-
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        wisataRecyclerView.setLayoutManager(layoutManager);
-
         mRateWisataAdapter = new RatingAdapter(mRateWisatas);
         wisataRecyclerView.setAdapter(mRateWisataAdapter);
 
-//        ItemClickSupportUtils.addTo(wisataRecyclerView)
-//                .setOnItemClickListener((recyclerView, position, v) -> {
-//                    Intent WisataDetailIntent = new Intent(mContext, DeatilWisataActivity.class);
-//                    TourWisata tourWisata = mTourWisatas.get(position);
-//
-//                    WisataDetailIntent.putExtra("nama", tourWisata.getNama());
-//                    WisataDetailIntent.putExtra("deskripsi", tourWisata.getDeskripsi());
-//                    WisataDetailIntent.putExtra("info", tourWisata.getInfo());
-//                    WisataDetailIntent.putExtra("penginapan", tourWisata.getPenginapan());
-//                    WisataDetailIntent.putExtra("transportasi", tourWisata.getTransportasi());
-//                    WisataDetailIntent.putExtra("makan", tourWisata.getMakan());
-//                    WisataDetailIntent.putExtra("lokasi", tourWisata.getLokasi());
-//                    WisataDetailIntent.putExtra("gambar", tourWisata.getGambar());
-//                    WisataDetailIntent.putExtra("tiket", tourWisata.getTiket());
-//                    WisataDetailIntent.putExtra("harga", tourWisata.getHarga());
-//
-//
-//                    startActivity(WisataDetailIntent);
-//                });
+        ItemClickSupportUtils.addTo(wisataRecyclerView)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    Rating ratingWisata = mRateWisatas.get(position);
+                    Intent WisataDetailIntent = new Intent(mContext, DetailUserRateActivity.class);
+
+                    WisataDetailIntent.putExtra("id", ratingWisata.getId());
+                    WisataDetailIntent.putExtra("user_id", ratingWisata.getUser_id());
+                    WisataDetailIntent.putExtra("nama_wisata", ratingWisata.getNama_wisata());
+                    WisataDetailIntent.putExtra("nama", ratingWisata.getNama());
+                    WisataDetailIntent.putExtra("rating", ratingWisata.getRating());
+                    WisataDetailIntent.putExtra("review", ratingWisata.getReview());
+
+                    startActivity(WisataDetailIntent);
+                });
+
 
         return viewRoot;
     }
+
 
     @Override
     public void onResume() {

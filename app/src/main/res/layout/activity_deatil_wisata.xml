@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@drawable/ic_mood"
+        android:src="@drawable/ic_star_half"
         app:backgroundTint="#279AF1"
         app:fabSize="normal"
         app:layout_anchor="@+id/appbar"
