@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.ApiClient;
-import com.fatkhun.travelia.Utils.PrefUtils;
 import com.fatkhun.travelia.helper.SQLiteHandler;
 import com.fatkhun.travelia.helper.SessionManager;
 import com.fatkhun.travelia.model.Rating;
@@ -107,26 +106,6 @@ public class RateWisataActivity extends AppCompatActivity {
         String apitoken = user.get("api_token");
         Log.i(TAG, "onResponse: Rate " + apitoken);
 
-        // Storing user API Key in preferences
-        PrefUtils.storeApiKey(getApplicationContext(), user.get("api_token"));
-        Log.i(TAG, "onResponse: Rate" + PrefUtils.getApiKey(getApplicationContext()));
-
-        /**
-         * Check for stored Api Key in shared preferences
-         * If not present, make api call to register the user
-         * This will be executed when app is installed for the first time
-         * or data is cleared from settings
-         * */
-        if (TextUtils.isEmpty(PrefUtils.getApiKey(getApplicationContext()))) {
-            Log.i(TAG, "onCreate: @@@ " + PrefUtils.getApiKey(getApplicationContext()));
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            // user is already registered, fetch all notes
-
-        }
-
         btnSendFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +148,8 @@ public class RateWisataActivity extends AppCompatActivity {
                                     } else {
                                         String errorMsg = jsonRESULTS.getString("message");
                                         Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(RateWisataActivity.this, TabNavigationActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                        finish();
                                     }
                                 }else {
                                     // Error in login. Get the error message

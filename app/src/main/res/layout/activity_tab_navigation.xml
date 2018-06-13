@@ -71,31 +71,41 @@
             android:layout_gravity="bottom"
             android:orientation="vertical">
 
-            <ImageView
+            <RelativeLayout
+                android:orientation="vertical"
+                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/anggrek"
-                android:scaleType="centerInside" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tvResultEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:textSize="20dp"
-                android:text="Your Name Email"
-                android:textColor="@color/white_70" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/navbarbottom"
+                    android:scaleType="centerInside" />
 
-            <TextView
-                android:id="@+id/tvResultNama"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="16dp"
-                android:textSize="20dp"
-                android:text="Your Name Here"
-                android:textColor="@color/white_70" />
+                <TextView
+                    android:id="@+id/tvResultEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="16dp"
+                    android:textSize="20dp"
+                    android:text="Your Name Email"
+                    android:textColor="@color/white_70" />
+
+                <TextView
+                    android:id="@+id/tvResultNama"
+                    android:layout_below="@+id/tvResultEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="16dp"
+                    android:textSize="20dp"
+                    android:text="Your Name Here"
+                    android:textColor="@color/white_70" />
+            </RelativeLayout>
+
+
 
         </FrameLayout>
     </android.support.design.widget.NavigationView>

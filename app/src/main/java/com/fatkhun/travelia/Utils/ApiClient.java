@@ -56,12 +56,6 @@ public class ApiClient {
                         .addHeader("Accept", "application/json")
                         .addHeader("Content-Type", "application/json");
 
-                // Adding Authorization token (API Key)
-                // Requests will be denied without API key
-                if (!TextUtils.isEmpty(PrefUtils.getApiKey(context))) {
-                    requestBuilder.addHeader("Authorization", PrefUtils.getApiKey(context));
-                }
-
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }

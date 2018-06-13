@@ -134,9 +134,14 @@ public class TabNavigationActivity extends AppCompatActivity {
                         mCurrentSelectedPosition = 1;
                         return true;
                     case R.id.navigation_item_3:
+                        Snackbar.make(mContentFrame, "Maps", Snackbar.LENGTH_SHORT).show();
+                        myMaps();
+                        mCurrentSelectedPosition = 2;
+                        return true;
+                    case R.id.navigation_item_4:
                         Snackbar.make(mContentFrame, "Logout", Snackbar.LENGTH_SHORT).show();
                         logoutUser();
-                        mCurrentSelectedPosition = 2;
+                        mCurrentSelectedPosition = 3;
                         return true;
                     default:
                         return true;
@@ -157,6 +162,13 @@ public class TabNavigationActivity extends AppCompatActivity {
 
 
     }
+
+    private void myMaps() {
+        Intent intentMap = new Intent(getApplicationContext(), MapsTourActivity.class);
+        intentMap.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intentMap);
+    }
+
     // intent daftar user rate
     private void ListUserRate() {
         Intent intentRate = new Intent(getApplicationContext(), UserRateActivity.class);

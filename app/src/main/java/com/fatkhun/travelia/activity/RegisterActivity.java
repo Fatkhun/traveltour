@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.ApiClient;
@@ -30,11 +31,10 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText etNama;
-    EditText etEmail;
-    EditText etPassword;
+    EditText etNama, etEmail, etPassword;
     Button btnRegister;
     ProgressDialog loading;
+    TextView link_btnLogin;
 
     Context mContext;
     BaseApiService mApiService;
@@ -49,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnRegister = (Button) findViewById(R.id.btnRegister);
+        link_btnLogin = (TextView) findViewById(R.id.link_login);
 
         mContext = this;
         mApiService = ApiClient.getClient(getApplicationContext()).create(BaseApiService.class);
@@ -67,6 +68,14 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         }
 
+        link_btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
+            }
+        });
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,12 +85,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()){
                     requestRegister(username, email, password);
-                }else if(!isEmptyField(etNama.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Name is empty",Toast.LENGTH_LONG).show();
+                }else if(!isEmptyField(etNama.getText().toString()) || username.length() < 3){
+                    etNama.setError("At least 3 characters");
                 }else if (!isValidateEmail(etEmail.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Email is empty",Toast.LENGTH_LONG).show();
+                    etEmail.setError("Enter a valid email address");
+                }else if (!isEmptyField(etPassword.getText().toString())|| password.length() < 4 || password.length() > 10){
+                    etPassword.setError("Between 4 and 10 alphanumeric character");
                 }else {
-                    Toast.makeText(getApplicationContext(), "Password is empty",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Register invalid",Toast.LENGTH_SHORT).show();
                 }
             }
         });

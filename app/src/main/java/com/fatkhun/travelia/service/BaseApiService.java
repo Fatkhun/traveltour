@@ -1,6 +1,8 @@
 package com.fatkhun.travelia.service;
 
 
+import com.fatkhun.travelia.model.Map;
+
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -36,4 +38,10 @@ public interface BaseApiService {
                                       @Field("review") String review);
     @GET("rating/destroy/{id}/")
     Call<ResponseBody> deteleRate(@Path("id") int id, @Query("api_token") String api_token);
+
+    @GET("json")
+    Call<Map> request_map(@Query("origin") String origin,
+                          @Query("destination") String destination,
+                          @Query("api_key") String api_key
+    );
 }

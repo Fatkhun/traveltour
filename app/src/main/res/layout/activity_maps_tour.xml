@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true"
+    tools:context=".MapsTourActivity">
+
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:sothree="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:elevation="1dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="15dp"
+                android:background="@android:color/white">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:scrollbars="none"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tvPickUpFrom"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:layout_height="wrap_content"
+                        android:text="First Location" />
+                </HorizontalScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@android:color/darker_gray"></LinearLayout>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:scrollbars="none"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvDestLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Destination Location" />
+                </HorizontalScrollView>
+            </LinearLayout>
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        </RelativeLayout>
+
+    </android.support.v4.widget.DrawerLayout>
+    <include layout="@layout/item_bottom_maps_tour"></include>
+</android.support.design.widget.CoordinatorLayout>

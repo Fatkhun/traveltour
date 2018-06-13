@@ -11,10 +11,10 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatkhun.travelia.Utils.ApiClient;
-import com.fatkhun.travelia.Utils.PrefUtils;
 import com.fatkhun.travelia.model.User;
 import com.fatkhun.travelia.service.BaseApiService;
 import com.fatkhun.travelia.helper.SQLiteHandler;
@@ -22,6 +22,7 @@ import com.fatkhun.travelia.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,8 +34,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText etEmail, etPassword , etretypePassword;
-    Button btnLogin, btnRegister;
+    EditText etEmail, etPassword;
+    Button btnLogin;
+    TextView link_btnRegister;
     ProgressDialog loading;
 
     Context mContext;
@@ -51,9 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         mApiService = ApiClient.getClient(getApplicationContext()).create(BaseApiService.class); // meng-init yang ada di package apihelper
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        etretypePassword = (EditText) findViewById(R.id.etRetypePassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
+        link_btnRegister = (TextView) findViewById(R.id.link_signup);
 
         //SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -70,23 +71,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        /**
-         * Check for stored Api Key in shared preferences
-         * If not present, make api call to register the user
-         * This will be executed when app is installed for the first time
-         * or data is cleared from settings
-         * */
-        if (TextUtils.isEmpty(PrefUtils.getApiKey(this))) {
-            String email = etEmail.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
-            requestLogin(email, password);
-        } else {
-            // user is already registered, fetch all notes
-//            Intent intent = new Intent(getApplicationContext(), TabNavigationActivity.class);
-//            startActivity(intent);
-//            finish();
-        }
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,46 +81,25 @@ public class LoginActivity extends AppCompatActivity {
                 if (!email.isEmpty() && !password.isEmpty()) {
                     // login user
                     requestLogin(email, password);
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
-                            .show();
+                }if (!isValidateEmail(etEmail.getText().toString())){
+                    etEmail.setError("Enter a valid email address");
+                }else if (!isEmptyField(etPassword.getText().toString()) || password.length() < 4 || password.length() > 10){
+                    etPassword.setError("Between 4 and 10 alphanumeric characters");
                 }
             }
         });
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        link_btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, RegisterActivity.class));
+                startActivity(new Intent(mContext, RegisterActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
             }
         });
 
     }
 
     private void requestLogin(final String email, final String password){
-        Boolean isFormError;
-        EditText Email = (EditText) findViewById(R.id.etEmail);
-        EditText Password = (EditText) findViewById(R.id.etPassword);
-        EditText retypePassword = (EditText) findViewById(R.id.etRetypePassword);
-
-        if (!isValidateEmail(Email.getText().toString())){
-            Toast.makeText(this, "Email is empty or wrong",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else if (!isEmptyField(Password.getText().toString())){
-            Toast.makeText(this, "Password is empty",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else if (!isEmptyField(retypePassword.getText().toString())) {
-            Toast.makeText(this, "Confirm password is empty", Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else if (!isMatch(retypePassword.getText().toString(), Password.getText().toString())){
-            Toast.makeText(this, "Password is wrong",Toast.LENGTH_LONG).show();
-            isFormError = true;
-        }else {
-            isFormError = false;
-        }
-        if (!isFormError){
             loading = ProgressDialog.show(mContext, null, "Please Wait...", true, true);
             mApiService.loginRequest(etEmail.getText().toString(), etPassword.getText().toString())
                     .enqueue(new Callback<ResponseBody>() {
@@ -148,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject jsonRESULTS = new JSONObject(response.body().string());
                                     if (jsonRESULTS.getString("success").equals("true")){
                                         if (jsonRESULTS.getString("password") == String.valueOf(jsonRESULTS.getString("password"))){
-//
+
                                             Boolean error = jsonRESULTS.getBoolean("success");
                                             if(!error){
                                                 session.setLogin(false);
@@ -197,7 +160,6 @@ public class LoginActivity extends AppCompatActivity {
                             loading.dismiss();
                         }
                     });
-        }
 
     }
 

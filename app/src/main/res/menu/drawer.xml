@@ -12,9 +12,14 @@
             android:id="@+id/navigation_item_2"
             android:checked="true"
             android:icon="@drawable/ic_star_half"
-            android:title="MyRating" />
+            android:title="My Rating" />
         <item
             android:id="@+id/navigation_item_3"
+            android:checked="true"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="My Maps" />
+        <item
+            android:id="@+id/navigation_item_4"
             android:checked="true"
             android:icon="@drawable/ic_person"
             android:title="Logout" />
